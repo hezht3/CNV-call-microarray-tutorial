@@ -2,6 +2,7 @@
 
 cd /users/zhe/GEARS_CNV/PennCNV-1.0.5/example
 module load perl
+module load conda_R
 export PATH="/users/zhe/perl5/perlbrew/build/perl-5.14.2-PIC/perl-5.14.2/:$PATH"
 export PATH="/users/zhe/GEARS_CNV/PennCNV-1.0.5/:$PATH"
 
@@ -103,3 +104,90 @@ cat ex1.bed
 #    -output ex1.tabcnv \                  # specify output file name (default: STDOUT)
 #    ex1.rawcnv                            # inputfile
 # >
+perl runex.pl 8
+cat ex1.tabcnv
+
+# Exercise 9: convert CNV call in ex1.newcnv from tab-delimited format to PennCNV format
+# Running command <
+# convert_cnv.pl \
+#    -intype tab \                         # input file type: cnv (default) or assoc
+#    -outtype penncnv \                    # specify output file name (default: STDOUT)
+#    ex1.tabcnv                            # inputfile
+# >
+perl runex.pl 9
+cat ex1.tabcnv
+
+# Excisise 10: filter CNV calls in ex1.rawcnv and print out only deletions with >=10 SNPs and >=50kb
+# Running command <
+# filter_cnv.pl \
+#    -numsnp 10 \                          # minimum number of SNPs in CNV calls
+#    -length 50k \                         # minimum length of CNV calls (suffix of k or m is okay)
+#    -type del \                           # type of CNVs (dup or del)
+#    ex1.rawcnv                            # inputfile
+# >
+perl runex.pl 10
+
+# Exercise 11: compare CNV calls between pairs of samples
+# Running command <
+#    compare_cnv.pl \
+#    compdup ex1.rawcnv \                  # CNV calls on duplicated samples in the same file ('dup' operation)
+#    -list list.compdup                    # a tab-delimited 2-column file with two identifiers
+# >
+perl runex.pl 11
+
+# Exercise 12: compare CNV calls between pairs of samples
+# Running command <
+# compare_cnv.pl \
+#    compcall ex1.rawcnv \                 # CNV calls on same sample called by different algorithms in differnet files ('compcall' operation)
+#    -list list.compcall \                 # a tab-delimited 2-column file with two identifiers
+#    -cnv2 ex2.triocnv                     # callfile 2
+# >
+perl runex.pl 12
+
+# Exercise 13: generate CNV-based genotype calls)
+# Running command <
+# infer_snp_allele.pl \
+#    -pfb example.pfb \                    # population frequency of B allele file
+#    -hmm example.hmm \                    # the HMM file used in PennCNV calling
+#    -allcn 221 \                          # copy number of nuclear family (for inherited CNV)
+#    -start rs11716390 \                   # start SNP of the CNV
+#    -end rs17039742 \                     # end SNP of the CNV
+#    -out ex13.geno \                      # the output file (default: STDOUT)
+# father.txt mother.txt offspring.txt      # inputfile
+# >
+perl runex.pl 13
+cat ex13.geno
+
+# Exercise 14: validate de novo CNVs and assign P-values
+# Running command <
+# infer_snp_allele.pl \
+#    -pfb example.pfb \                    # population frequency of B allele file
+#    -hmm example.hmm \                    # the HMM file used in PennCNV calling
+#    -denovocn 1 \                         # copy number of offspring (for de novo CNV)
+#    -start rs11716390 \                   # start SNP of the CNV
+#    -end rs17039742 \                     # end SNP of the CNV
+#    -out ex14.geno \                      # the output file (default: STDOUT)
+#    father.txt mother.txt offspring.txt
+# >
+perl runex.pl 14
+cat ex14.geno
+
+# Exercise 15: convert Canary CNV calls to PennCNV format
+# Running command <
+# convert_cnv.pl \
+#    -intype canary \                                # input file format (default: penncnv)
+#    -outtype penncnv \                              # output file format (default: tab)
+#    -canarydef GenomeWideSNP_6.hg18.cnv_defs \      # file containing CNP locations (for Canary calls)
+#    -output ex15.rawcnv \                           # specify output file name (default: STDOUT)
+#    example.canary_calls                            # inputfile
+# >
+perl runex.pl 15
+cat ex15.rawcnv
+
+# Exercise 16: generate plots of LRR and BAF values for CNV calls in JPG format (R must be installed in the system for plotting)
+# Running command <
+# visualize_cnv.pl \
+#    -format plot \                        # out file format (bed, html, beadstudio, wig)
+#    -signal offspring.txt ex1.rawcnv
+# >
+perl runex.pl 16
