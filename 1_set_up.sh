@@ -18,6 +18,8 @@ cd PennCNV-1.0.5/kext/
 make
 
 # ----------------------------- iPattern ----------------------------- #
+cd GEARS_CNV
+
 wget https://www.tcag.ca/documents/tools/ipn_0.582.tar.gz
 tar xvfz ipn_0.582.tar.gz
 
@@ -31,8 +33,20 @@ cd /users/zhe/GEARS_CNV/ipn_0.582/ipnlib/
 ln -sf ipn_pbs_qsub.py ipn_qsub.py
 
 # ----------------------------- QuantiSNP ----------------------------- #
+cd GEARS_CNV
+
 wget ftp://ftp.stats.ox.ac.uk/pub/yau/quantisnp2/mcr/MCRinstaller64.run
 wget ftp://ftp.stats.ox.ac.uk/pub/yau/quantisnp2/executables/09042010/install_quantisnp
 
 sh MCRinstaller64.run
 sh install_quantisnp
+
+# download local GC content file
+mkdir gc_content
+cd gc_content/
+
+wget ftp://ftp.stats.ox.ac.uk/pub/yau/quantisnp2/download/b35.tar.gz
+wget ftp://ftp.stats.ox.ac.uk/pub/yau/quantisnp2/download/b36.tar.gz
+wget ftp://ftp.stats.ox.ac.uk/pub/yau/quantisnp2/download/b37.tar.gz
+
+ls b*.tar.gz |xargs -n1 tar -xzf
