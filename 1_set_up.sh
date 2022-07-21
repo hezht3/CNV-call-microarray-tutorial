@@ -1,4 +1,5 @@
 # ----------------------------- Installation ----------------------------- #
+qrsh -l mem_free=20G,h_vmem=20G,h_fsize=20G
 
 # ----------------------------- PennCNV ----------------------------- #
 mkdir GEARS_CNV
@@ -18,7 +19,7 @@ cd PennCNV-1.0.5/kext/
 make
 
 # ----------------------------- iPattern ----------------------------- #
-cd GEARS_CNV
+cd /users/zhe/GEARS_CNV/
 
 wget https://www.tcag.ca/documents/tools/ipn_0.582.tar.gz
 tar xvfz ipn_0.582.tar.gz
@@ -33,15 +34,28 @@ cd /users/zhe/GEARS_CNV/ipn_0.582/ipnlib/
 ln -sf ipn_pbs_qsub.py ipn_qsub.py
 
 # ----------------------------- QuantiSNP ----------------------------- #
-cd GEARS_CNV
+# reference: https://github.com/hernanmd/QuantiSNP2
+cd /users/zhe/GEARS_CNV/
 
+# install MCR
 wget ftp://ftp.stats.ox.ac.uk/pub/yau/quantisnp2/mcr/MCRinstaller64.run
-wget ftp://ftp.stats.ox.ac.uk/pub/yau/quantisnp2/executables/09042010/install_quantisnp
+chmod 755 MCRinstaller64.run
+./MCRinstaller64.run  --noexec --keep --nox11 --target Install
+cd Install
+./MCRInstaller.bin -is:extract
+cd istemp43633202141501
+chmod 755 jre1.5.0-linux-amd64.bin
+./jre1.5.0-linux-amd64.bin
+./bin/java -jar setup.jar -console
 
-sh MCRinstaller64.run
-sh install_quantisnp
+# install quantisnp
+cd ../..
+wget ftp://ftp.stats.ox.ac.uk/pub/yau/quantisnp2/executables/09042010/install_quantisnp
+chmod 755 install_quantisnp
+./install_quantisnp
 
 # download local GC content file
+cd quantisnp/
 mkdir gc_content
 cd gc_content/
 
