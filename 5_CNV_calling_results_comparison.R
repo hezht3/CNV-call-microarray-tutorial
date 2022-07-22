@@ -1,0 +1,111 @@
+###########################################################################
+# Compare CNV calling results from PennCNV and QuantiSNP
+# Author: Johnathan He
+# Date: 7/21/2022
+###########################################################################
+
+setwd("/users/zhe/GEARS_CNV/")
+require(tidyverse)
+require(ggvenn)
+
+###########################################################################
+# Data preprocessing
+###########################################################################
+# Import CNV calling results from PennCNV & QuantiSNP (GC model adjusted)
+cnv_penn <- read_table("./PennCNV-1.0.5/OUTPUT/sampleall.adjusted.rawcnv",
+                       col_names = c("region", "numsnp", "length", "cn", "sample", "start_snp", "end_snp"))
+
+cnv_quan <- list.files("./quantisnp/OUTPUT/", pattern = "*.cnv") %>% 
+    map_dfr(~ read_table(paste("./quantisnp/OUTPUT/", .x, sep = ""), skip = 1,
+                         col_names = c("sample", "chr", "start_pos", "end_pos", "start_snp", "end_snp",
+                                       "length", "probes", "cn",
+                                       "BF_max", "BF_1", "BF_2", "BF_3", "BF_4", "BF_5", "BF_6")))
+
+# Harmonize data stratucture
+cnv_penn <- cnv_penn %>% 
+    separate(region, c("chr", "start_pos", "end_pos")) %>% 
+    mutate(chr = str_remove_all(chr, pattern = "chr")) %>% 
+    mutate(numsnp = str_remove_all(numsnp, pattern = "numsnp=")) %>% 
+    mutate(length = str_remove_all(length, pattern = "length=")) %>% 
+    mutate(cn = substr(cn, 11, 11)) %>% 
+    mutate(cn = as.numeric(cn)) %>% 
+    mutate(start_snp = str_remove_all(start_snp, pattern = "startsnp=")) %>% 
+    mutate(end_snp = str_remove_all(end_snp, pattern = "endsnp=")) %>% 
+    mutate(sample = case_when(sample == "INPUT/sample1.txt" ~ "99HI0697A",
+                              sample == "INPUT/sample2.txt" ~ "99HI0698C",
+                              sample == "INPUT/sample3.txt" ~ "99HI0700A"))
+
+cnv_quan <- cnv_quan %>% 
+    mutate(across(c("chr", "start_pos", "end_pos"),
+                  ~ as.character(.x)))
+
+# Combine calls
+cnv_combine <- cnv_penn %>% 
+    full_join(cnv_quan, by = c("sample", "chr", "start_snp", "end_snp", "cn"),
+              suffix = c(".penn", ".quan")) %>% 
+    arrange(sample, chr, start_pos.penn, start_pos.quan, end_pos.penn, end_pos.quan) %>% 
+    select(sample, chr, cn, numsnp, probes, start_snp, end_snp,
+           length.penn, length.quan, start_pos.penn, start_pos.quan, end_pos.penn, end_pos.quan, contains("BF"))
+
+###########################################################################
+# Results comparison
+###########################################################################
+# Venn diagram
+cnv_venn <- cnv_combine %>% 
+    mutate(penn = if_else(is.na(length.penn) == FALSE, 1, 0),
+           quan = if_else(is.na(length.quan) == FALSE, 1, 0))
+
+ggvenn(list(`PennCNV` = cnv_venn %>% filter(penn == 1) %>% unite("cnv", c(chr, start_snp, end_snp), sep = ".") %>% pull(cnv),
+            `QuantiSNP` = cnv_venn %>% filter(quan == 1) %>% unite("cnv", c(chr, start_snp, end_snp), sep = ".") %>% pull(cnv)))
+
+# No. of SNPs/probes concordance
+cnv_combine %>% 
+    filter(is.na(numsnp) == FALSE & is.na(probes) == FALSE) %>% 
+    mutate(across(c(numsnp, probes), ~ as.numeric(.x))) %>% 
+    ggplot(aes(x = numsnp, y = probes)) +
+    geom_point() +
+    geom_smooth(method = "lm", size = 0.5) +
+    coord_equal() +
+    ggtitle("Concordance of no. of SNPs/probes for each CNV called") +
+    xlab("PennCNV") +
+    ylab("QuantiSNP") +
+    theme_minimal()
+
+# Length concordance
+cnv_combine %>% 
+    filter(is.na(length.penn) == FALSE & is.na(length.quan) == FALSE) %>% 
+    mutate(across(contains("length"), ~ str_remove_all(.x, pattern = ",") %>% as.numeric(.x))) %>% 
+    ggplot(aes(x = length.penn, y = length.quan)) +
+    geom_point() +
+    geom_smooth(method = "lm", size = 0.5) +
+    coord_equal() +
+    ggtitle("Concordance of length for each CNV called") +
+    xlab("PennCNV") +
+    ylab("QuantiSNP") +
+    theme_minimal()
+
+# Start position concordance
+cnv_combine %>% 
+    filter(is.na(start_pos.penn) == FALSE & is.na(start_pos.quan) == FALSE) %>% 
+    mutate(across(contains("start_pos"), ~ str_remove_all(.x, pattern = ",") %>% as.numeric(.x))) %>% 
+    ggplot(aes(x = start_pos.penn, y = start_pos.quan)) +
+    geom_point() +
+    geom_smooth(method = "lm", size = 0.5) +
+    coord_equal() +
+    ggtitle("Concordance of start position for each CNV called") +
+    xlab("PennCNV") +
+    ylab("QuantiSNP") +
+    theme_minimal()
+
+# End position concordance
+cnv_combine %>% 
+    filter(is.na(end_pos.penn) == FALSE & is.na(end_pos.quan) == FALSE) %>% 
+    mutate(across(contains("end_pos"), ~ str_remove_all(.x, pattern = ",") %>% as.numeric(.x))) %>% 
+    ggplot(aes(x = end_pos.penn, y = end_pos.quan)) +
+    geom_point() +
+    geom_smooth(method = "lm", size = 0.5) +
+    coord_equal() +
+    ggtitle("Concordance of end position for each CNV called") +
+    xlab("PennCNV") +
+    ylab("QuantiSNP") +
+    theme_minimal()
