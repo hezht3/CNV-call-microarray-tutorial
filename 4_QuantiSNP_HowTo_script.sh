@@ -9,7 +9,7 @@ cd /users/zhe/GEARS_CNV/quantisnp
 # define program variables
 set EMITERS 		= 10									               		# number of EM iterations to use during training
 set LSETTING 		= 2000000								            		# characteristic CNV length parameter
-set GCDIR 			= /users/zhe/GEARS_CNV/quantisnp/gc_content/b35/			# set path to GC data files (contents of gc_data.zip)
+set GCDIR 			= /users/zhe/GEARS_CNV/quantisnp/gc_content/b36/			# set path to GC data files (contents of gc_data.zip)
 set SUBSAMPLELEVEL  = 1 							            				# number of sub-samples to use
 set PARAMSFILE 		= ./config/params.dat								     	# path to parameters file
 set LEVELSFILE 		= ./config/levels.dat								    	# path to levels file
@@ -54,7 +54,7 @@ echo "SAMPLE 1 CALLING END"
 # define program variables
 set EMITERS 		= 10									               		# number of EM iterations to use during training
 set LSETTING 		= 2000000								            		# characteristic CNV length parameter
-set GCDIR 			= /users/zhe/GEARS_CNV/quantisnp/gc_content/b35/			# set path to GC data files (contents of gc_data.zip)
+set GCDIR 			= /users/zhe/GEARS_CNV/quantisnp/gc_content/b36/			# set path to GC data files (contents of gc_data.zip)
 set SUBSAMPLELEVEL  = 1 							            				# number of sub-samples to use
 set PARAMSFILE 		= ./config/params.dat								     	# path to parameters file
 set LEVELSFILE 		= ./config/levels.dat								    	# path to levels file
@@ -99,7 +99,7 @@ echo "SAMPLE 2 CALLING END"
 # define program variables
 set EMITERS 		= 10									               		# number of EM iterations to use during training
 set LSETTING 		= 2000000								            		# characteristic CNV length parameter
-set GCDIR 			= /users/zhe/GEARS_CNV/quantisnp/gc_content/b35/			# set path to GC data files (contents of gc_data.zip)
+set GCDIR 			= /users/zhe/GEARS_CNV/quantisnp/gc_content/b36/			# set path to GC data files (contents of gc_data.zip)
 set SUBSAMPLELEVEL  = 1 							            				# number of sub-samples to use
 set PARAMSFILE 		= ./config/params.dat								     	# path to parameters file
 set LEVELSFILE 		= ./config/levels.dat								    	# path to levels file

@@ -14,3 +14,6 @@ do
 done
 
 mkdir OUTPUT
+
+chmod u+x ./script/4_QuantiSNP_HowTo_script.sh
+./script/4_QuantiSNP_HowTo_script.sh

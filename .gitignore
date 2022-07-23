@@ -40,3 +40,6 @@ vignettes/*.pdf
 
 # RMarkdown output
 *.html
+
+# Output file
+OUTPUT/
