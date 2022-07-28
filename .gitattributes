@@ -1,0 +1,4 @@
+* linguist-language
+*.R linguist-language=R
+*.Rmd linguist-language=HTML
+*.sh linguist-language=Shell
