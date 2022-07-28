@@ -1,4 +1,4 @@
 * linguist-language
 *.R linguist-language=R
-*.Rmd linguist-language=HTML
+*.Rmd linguist-language=html
 *.sh linguist-language=Shell
