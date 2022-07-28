@@ -96,7 +96,7 @@ ggvenn(list(`PennCNV` = cnv_venn %>% filter(penn == 1) %>% pull(cnv),
             `QuantiSNP` = cnv_venn %>% filter(quan == 1) %>% pull(cnv)))
 ```
 
-Copy number (CN) for all concordant CNV calls (normal: CN = 2, deletion: 0 $\leq$ CN $\leq$ 1, duplication: CN $geq$ 3):
+Copy number (CN) for all concordant CNV calls (normal: CN = 2, deletion: 0 $\leq$ CN $\leq$ 1, duplication: CN $\geq$ 3):
 
 ```{r}
 cnv_combine %>% 
