@@ -58,3 +58,10 @@ detect_cnv.pl \
 cat OUTPUT/sampleall.adjusted.rawcnv
 wc -l OUTPUT/sampleall.adjusted.rawcnv
 cat LOG/sampleall.adjusted.log
+
+# anneal
+clean_cnv.pl \
+    combineseg \
+    --signalfile ./INPUT/sample1.txt \
+    ./OUTPUT/sampleall.adjusted.rawcnv \
+    > ./OUTPUT/sampleall.adjusted.anneal.rawcnv
