@@ -39,7 +39,7 @@ vignettes/*.pdf
 .Renviron
 
 # RMarkdown output
-*.html
+Documentation/
 
 # Output file
 OUTPUT/
